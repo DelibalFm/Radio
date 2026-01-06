@@ -13,10 +13,30 @@
     padding: 50px 20px;
   }
 
+  /* Başlık: Parlayan ışık animasyonu */
   h1 {
     font-size: 3em;
-    color: #999;
+    color: #fff; /* Ana renk beyaz */
     margin-bottom: 10px;
+    position: relative;
+    display: inline-block;
+  }
+
+  h1::after {
+    content: '';
+    position: absolute;
+    top: -5px; left: -5px;
+    width: 100%; height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #fff;
+    animation: glow 1.5s infinite alternate;
+    z-index: -1;
+  }
+
+  @keyframes glow {
+    0% { box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff; }
+    50% { box-shadow: 0 0 20px #fff, 0 0 25px #fff, 0 0 30px #fff; }
+    100% { box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff; }
   }
 
   p {
@@ -36,6 +56,12 @@
     padding: 20px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.6);
     margin-bottom: 15px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .player-wrapper:hover {
+    box-shadow: 0 0 25px #e9005a;
+    transform: scale(1.02);
   }
 
   /* Oynat/Durdur Butonu */
@@ -54,7 +80,7 @@
     color: #ff4f9c;
   }
 
-  /* Audio element gizli */
+  /* Audio gizli */
   audio {
     display: none;
   }
@@ -93,7 +119,7 @@
   /* Canlı gösterge */
   .live-indicator {
     display: flex;
-    flex-direction: column; /* yazı her zaman altında */
+    flex-direction: column;
     align-items: center;
     font-size: 1.2em;
     font-weight: bold;
@@ -126,7 +152,7 @@
 </head>
 <body>
 
-<h1>🎵 Delibal FM</h1>
+<h1>Delibal FM</h1>
 <p>Canlı Yayını Dinlemek İçin Play Tuşuna Basın:</p>
 
 <div class="player-wrapper">
