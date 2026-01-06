@@ -20,11 +20,6 @@
     margin-bottom: 10px;
   }
 
-  h1 span {
-    font-size: 1.5em;
-  }
-
-  /* Alt yazı */
   p {
     font-size: 1.2em;
     color: #bbb;
@@ -41,6 +36,13 @@
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.6);
     background: #222;
+    margin-bottom: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .player-wrapper:hover {
+    box-shadow: 0 0 25px #e9005a;
+    transform: scale(1.02);
   }
 
   audio {
@@ -49,35 +51,44 @@
     display: block;
   }
 
-  /* Hover efekti */
-  .player-wrapper:hover {
-    box-shadow: 0 0 25px #e9005a;
-    transform: scale(1.02);
-    transition: 0.3s;
-  }
-
   /* Canlı gösterge */
   .live-indicator {
-    margin-top: 15px;
-    display: inline-flex;
+    display: flex;
+    flex-direction: column; /* yazıyı her zaman altında tutar */
     align-items: center;
     font-size: 1.2em;
     font-weight: bold;
-    color: red; /* yazısı kırmızı */
+    margin-top: 10px;
   }
 
   .live-dot {
     width: 15px;
     height: 15px;
-    background-color: #0f0; /* yeşil yanıp sönen yuvarlak */
+    background-color: #0f0;
     border-radius: 50%;
-    margin-right: 10px;
     animation: blink 1s infinite;
+    margin-bottom: 5px;
+  }
+
+  .live-text {
+    color: red;
   }
 
   @keyframes blink {
     0%, 50%, 100% { opacity: 1; }
     25%, 75% { opacity: 0; }
+  }
+
+  /* Oynat/durdur butonu animasyonu */
+  audio::-webkit-media-controls-play-button,
+  audio::-webkit-media-controls-pause-button {
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  audio:hover::-webkit-media-controls-play-button,
+  audio:hover::-webkit-media-controls-pause-button {
+    transform: scale(1.2);
   }
 
   @media (max-width: 600px) {
@@ -100,7 +111,7 @@
 
 <div class="live-indicator">
   <div class="live-dot"></div>
-  Canlı Yayın
+  <div class="live-text">Canlı Yayın</div>
 </div>
 
 </body>
