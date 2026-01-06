@@ -31,28 +31,45 @@
     margin-bottom: 30px;
   }
 
-  /* Player */
-  audio {
+  /* Modern Player */
+  .player-wrapper {
+    position: relative;
+    display: inline-block;
     width: 90%;
     max-width: 500px;
-    border-radius: 10px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+    background: #222;
+  }
+
+  audio {
+    width: 100%;
     outline: none;
+    display: block;
+  }
+
+  /* Hover efekti */
+  .player-wrapper:hover {
+    box-shadow: 0 0 25px #e9005a;
+    transform: scale(1.02);
+    transition: 0.3s;
   }
 
   /* Canlı gösterge */
   .live-indicator {
-    margin-top: 25px;
+    margin-top: 15px;
     display: inline-flex;
     align-items: center;
     font-size: 1.2em;
     font-weight: bold;
-    color: #0f0;
+    color: red; /* yazısı kırmızı */
   }
 
   .live-dot {
     width: 15px;
     height: 15px;
-    background-color: #0f0;
+    background-color: #0f0; /* yeşil yanıp sönen yuvarlak */
     border-radius: 50%;
     margin-right: 10px;
     animation: blink 1s infinite;
@@ -74,10 +91,12 @@
 <h1>🎵 Delibal FM</h1>
 <p>Canlı Yayını Dinlemek İçin Play Tuşuna Basın:</p>
 
-<audio controls>
-  <source src="https://radyoserver1.okeylisans.com:8030/live.mp3" type="audio/mpeg">
-  Tarayıcınız audio elementini desteklemiyor.
-</audio>
+<div class="player-wrapper">
+  <audio controls>
+    <source src="https://radyoserver1.okeylisans.com:8030/live.mp3" type="audio/mpeg">
+    Tarayıcınız audio elementini desteklemiyor.
+  </audio>
+</div>
 
 <div class="live-indicator">
   <div class="live-dot"></div>
