@@ -225,104 +225,41 @@ volumeSlider.addEventListener('input', (e) => {
 
 </body>
 </html>
-<!-- Chat Paneli -->
-<div id="chat-container">
-  <div id="chat-box"></div>
-  <input type="text" id="nick" placeholder="Nick" />
-  <input type="text" id="message" placeholder="Mesajınızı yazın..." />
-  <button id="sendBtn">Gönder</button>
+<div id="dj-status" style="
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background: #888888;  /* Auto DJ rengi */
+  color: white;
+  display: inline-block;
+">
+  Auto DJ
 </div>
 
-<!-- CSS -->
-<style>
-  #chat-container {
-    width: 300px;
-    height: 400px;
-    background: #1a1a1a; /* Radyo koyu renk teması */
-    color: #ffffff;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    border-radius: 10px;
-    font-family: Arial, sans-serif;
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    box-shadow: 0 0 10px #000000aa;
-  }
-
-  #chat-box {
-    flex: 1;
-    overflow-y: auto;
-    margin-bottom: 10px;
-    background: #111111;
-    padding: 5px;
-    border-radius: 5px;
-  }
-
-  #chat-box p {
-    margin: 5px 0;
-  }
-
-  #nick, #message {
-    padding: 5px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    border: none;
-  }
-
-  #sendBtn {
-    padding: 5px;
-    border: none;
-    border-radius: 5px;
-    background: #ff4d4d; /* Radyo kırmızı tonuna yakın */
-    color: white;
-    cursor: pointer;
-  }
-</style>
-
-<!-- Firebase + Chat JS -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 <script>
-  // Firebase config → BURAYA kendi config’inizi yapıştırın
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
+  // Yayın durumu kontrolü
+  // Burada örnek olarak bir değişken kullanıyoruz
+  // true → DJ Delibal yayında, false → Auto DJ
+  let djDelibalOnline = false; // burayı yayın durumuna göre değiştir
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-
-  const chatBox = document.getElementById('chat-box');
-  const nickInput = document.getElementById('nick');
-  const messageInput = document.getElementById('message');
-  const sendBtn = document.getElementById('sendBtn');
-
-  sendBtn.onclick = () => {
-    const nick = nickInput.value.trim() || "Misafir";
-    const msg = messageInput.value.trim();
-    if(msg) {
-      db.ref('messages').push({
-        nick: nick,
-        message: msg,
-        timestamp: Date.now()
-      });
-      messageInput.value = '';
+  function updateDJStatus() {
+    const statusDiv = document.getElementById('dj-status');
+    if(djDelibalOnline) {
+      statusDiv.innerText = "DJ Delibal Yayında";
+      statusDiv.style.background = "#4CAF50"; // canlı yeşil
+    } else {
+      statusDiv.innerText = "Auto DJ";
+      statusDiv.style.background = "#888888"; // gri soluk
     }
-  };
+  }
 
-  db.ref('messages').on('child_added', snapshot => {
-    const data = snapshot.val();
-    const p = document.createElement('p');
-    const time = new Date(data.timestamp).toLocaleTimeString();
-    p.innerHTML = `<strong style="color:#ff4d4d;">${data.nick}</strong> [${time}]: ${data.message}`;
-    chatBox.appendChild(p);
-    chatBox.scrollTop = chatBox.scrollHeight;
-  });
+  // Örnek: Yayın değişimi simülasyonu
+  setInterval(() => {
+    djDelibalOnline = !djDelibalOnline; // her 10 saniyede değişsin (demo)
+    updateDJStatus();
+  }, 10000);
+
+  // Başlangıçta durumu güncelle
+  updateDJStatus();
 </script>
