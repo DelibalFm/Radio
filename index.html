@@ -2,167 +2,116 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Delibal FM | Canlı Radyo</title>
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Delibal FM Canlı Radyo Yayını">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<title>Delibal FM</title>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:'Poppins',sans-serif;
-}
-
 body{
-  min-height:100vh;
-  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  font-family:Arial,sans-serif;
+  background:#111;
+  color:#ccc;
+  text-align:center;
+  padding:40px 15px;
+  margin:0;
+}
+
+h1{
+  font-size:3em;
   color:#fff;
-  display:flex;
-  flex-direction:column;
-}
-
-header{
-  padding:20px;
-  text-align:center;
-  background:rgba(0,0,0,.35);
-  backdrop-filter:blur(6px);
-}
-
-header h1{
-  font-size:2.2rem;
-  font-weight:600;
-}
-
-header p{
-  opacity:.8;
-  margin-top:5px;
-}
-
-main{
-  flex:1;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:25px;
-}
-
-.player{
-  background:rgba(255,255,255,.08);
-  border-radius:22px;
-  padding:30px;
-  max-width:420px;
-  width:100%;
-  text-align:center;
-  box-shadow:0 20px 40px rgba(0,0,0,.45);
-}
-
-.player h2{
-  font-weight:500;
   margin-bottom:10px;
 }
 
-.live{
-  color:#00ff9d;
-  font-size:.9rem;
+.player-wrapper{
+  max-width:480px;
+  margin:30px auto;
+  background:#222;
+  padding:25px;
+  border-radius:15px;
+  box-shadow:0 0 25px rgba(233,0,90,.6);
+}
+
+.play-btn{
+  cursor:pointer;
   margin-bottom:20px;
 }
 
-.buttons{
-  display:flex;
-  justify-content:center;
-  gap:20px;
+.play-btn svg{
+  width:60px;
+  height:60px;
+  fill:#e9005a;
+  transition:.2s;
 }
 
-button{
-  border:none;
-  border-radius:50px;
-  padding:14px 30px;
-  font-size:1rem;
-  font-weight:600;
-  cursor:pointer;
-  background:#00ff9d;
-  color:#000;
-  transition:.25s;
+.play-btn:hover svg{
+  transform:scale(1.2);
 }
 
-button:hover{
-  background:#00d987;
-  transform:scale(1.05);
-}
-
-.status{
+.volume-slider{
+  width:80%;
   margin-top:15px;
-  font-size:.85rem;
-  opacity:.85;
+  accent-color:#e9005a;
 }
 
-footer{
-  padding:15px;
-  text-align:center;
-  font-size:.85rem;
-  opacity:.65;
+.live{
+  margin-top:20px;
+  font-weight:bold;
+  color:#0f0;
 }
 
-@media(max-width:480px){
-  header h1{font-size:1.8rem;}
-  .player{padding:22px;}
-}
+audio{display:none;}
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>Delibal FM</h1>
-  <p>Canlı Radyo Yayını</p>
-</header>
+<h1>Delibal FM</h1>
+<p>Canlı Yayın</p>
 
-<main>
-  <div class="player">
-    <h2>Şimdi Yayında</h2>
-    <div class="live">🔴 CANLI</div>
+<div class="player-wrapper">
 
-    <!-- RADYO PLAYER -->
-    <audio id="radio" preload="none" crossorigin="anonymous">
-      <source src="https://radyoserver1.okeylisans.com:8030/live.mp3" type="audio/mpeg">
-    </audio>
-
-    <div class="buttons">
-      <button onclick="playRadio()">▶ Play</button>
-      <button onclick="stopRadio()">⏸ Stop</button>
-    </div>
-
-    <div class="status" id="status">Hazır</div>
+  <div class="play-btn" id="playBtn">
+    <svg id="icon" viewBox="0 0 24 24">
+      <path d="M8 5v14l11-7z"/>
+    </svg>
   </div>
-</main>
 
-<footer>
-  © 2026 Delibal FM • Tüm Hakları Saklıdır
-</footer>
+  <input type="range" min="0" max="1" step="0.01" value="1" id="volume" class="volume-slider">
+
+  <div class="live">🔴 CANLI YAYIN</div>
+
+  <audio id="radio" preload="none" crossorigin="anonymous">
+    <source src="https://radyoserver1.okeylisans.com:8030/;" type="audio/mpeg">
+  </audio>
+
+</div>
 
 <script>
 const radio = document.getElementById("radio");
-const statusText = document.getElementById("status");
+const playBtn = document.getElementById("playBtn");
+const icon = document.getElementById("icon");
+const volume = document.getElementById("volume");
 
-function playRadio(){
-  radio.play().then(() => {
-    statusText.innerText = "Yayın Çalıyor";
-  }).catch(err => {
-    statusText.innerText = "Tarayıcı yayını engelledi";
-    console.error(err);
-    alert("Yayın başlatılamadı.\nTarayıcı veya stream kaynaklı olabilir.");
-  });
-}
+let playing = false;
 
-function stopRadio(){
-  radio.pause();
-  radio.currentTime = 0;
-  statusText.innerText = "Durduruldu";
-}
+playBtn.onclick = () => {
+  if(!playing){
+    radio.play().then(()=>{
+      icon.innerHTML = '<rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/>';
+      playing = true;
+    }).catch(err=>{
+      alert("Yayın başlatılamadı. Sunucu HTML5 uyumlu olmayabilir.");
+      console.error(err);
+    });
+  }else{
+    radio.pause();
+    icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+    playing = false;
+  }
+};
+
+volume.oninput = e => {
+  radio.volume = e.target.value;
+};
 </script>
 
 </body>
