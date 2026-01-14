@@ -9,8 +9,6 @@
 :root{
   --pink:#ff4fd8;
   --purple:#7a4cff;
-  --bg:#0b0614;
-  --card:#140b24;
 }
 
 *{box-sizing:border-box}
@@ -18,8 +16,7 @@
 body{
   margin:0;
   min-height:100vh;
-  background:
-    radial-gradient(circle at top, #24104a, #05010a 70%);
+  background:radial-gradient(circle at top, #24104a, #05010a 70%);
   font-family:'Segoe UI',sans-serif;
   color:#eee;
   display:flex;
@@ -28,7 +25,7 @@ body{
   padding:20px;
 }
 
-/* ANA KART */
+/* ANA PLAYER */
 .player{
   width:100%;
   max-width:420px;
@@ -42,7 +39,6 @@ body{
     0 0 80px rgba(122,76,255,.15);
 }
 
-/* NEON ÇERÇEVE */
 .player::before{
   content:'';
   position:absolute;
@@ -58,7 +54,6 @@ body{
 h1{
   margin:0 0 6px;
   font-size:2.3em;
-  letter-spacing:1px;
   color:#fff;
   text-shadow:0 0 15px rgba(255,79,216,.6);
 }
@@ -86,28 +81,17 @@ h1{
   transition:.25s;
 }
 
-.play-btn:hover{
-  transform:scale(1.08);
-}
-
-.play-btn svg{
-  width:42px;
-  height:42px;
-  fill:#12061f;
-}
+.play-btn:hover{transform:scale(1.08)}
+.play-btn svg{width:42px;height:42px;fill:#12061f}
 
 /* VOLUME */
-.volume{
-  margin-top:10px;
-}
-
+.volume{margin-top:10px}
 .volume label{
   display:block;
   font-size:.85em;
   opacity:.7;
   margin-bottom:8px;
 }
-
 .volume input{
   width:100%;
   accent-color:var(--pink);
@@ -115,23 +99,40 @@ h1{
 
 /* LIVE */
 .live{
-  margin-top:22px;
-  font-size:.95em;
+  margin-top:24px;
+  font-size:1em;
   font-weight:600;
-  color:#ff3b3b;
   display:flex;
   align-items:center;
   justify-content:center;
   gap:8px;
 }
 
-.live span{
+.live-dot{
   width:10px;
   height:10px;
   border-radius:50%;
   background:#ff3b3b;
   box-shadow:0 0 12px #ff3b3b;
   animation:pulse 1s infinite;
+}
+
+/* DJ NEON EFEKT */
+#djName{
+  font-weight:800;
+  background:linear-gradient(90deg,var(--pink),var(--purple));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:
+    0 0 6px rgba(255,79,216,.8),
+    0 0 14px rgba(122,76,255,.8),
+    0 0 28px rgba(255,79,216,.6);
+  animation:neonPulse 2s infinite alternate;
+}
+
+@keyframes neonPulse{
+  from{opacity:.85}
+  to{opacity:1}
 }
 
 @keyframes pulse{
@@ -162,11 +163,13 @@ audio{display:none}
     <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
   </div>
 
+  <!-- 🔥 DJ ADI – BURAYI DEĞİŞTİR -->
   <div class="live">
-    <span></span> CANLI YAYIN
+    <div class="live-dot"></div>
+    <span id="djName">Auto DJ</span> YAYINDA
   </div>
 
-  <audio id="radio" preload="none" crossorigin="anonymous">
+  <audio id="radio" preload="none">
     <source src="https://radyoserver1.okeylisans.com:8030/live.mp3" type="audio/mpeg">
   </audio>
 
@@ -182,14 +185,11 @@ let playing = false;
 
 playBtn.onclick = () => {
   if(!playing){
-    radio.play().then(()=>{
-      icon.innerHTML =
-        '<rect x="6" y="5" width="4" height="14"/>' +
-        '<rect x="14" y="5" width="4" height="14"/>';
-      playing = true;
-    }).catch(()=>{
-      alert("Yayın başlatılamadı.");
-    });
+    radio.play();
+    icon.innerHTML =
+      '<rect x="6" y="5" width="4" height="14"/>' +
+      '<rect x="14" y="5" width="4" height="14"/>';
+    playing = true;
   }else{
     radio.pause();
     icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
