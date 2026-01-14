@@ -97,7 +97,7 @@ h1{
   accent-color:var(--pink);
 }
 
-/* LIVE AREA */
+/* LIVE */
 .live{
   margin-top:24px;
   font-size:1em;
@@ -108,19 +108,17 @@ h1{
   gap:8px;
 }
 
-/* NEON DOT (UYUMLU PEMBE/MOR) */
+/* DOT */
 .live-dot{
   width:10px;
   height:10px;
   border-radius:50%;
   background:linear-gradient(135deg,var(--pink),var(--purple));
-  box-shadow:
-    0 0 10px var(--pink),
-    0 0 18px var(--purple);
+  box-shadow:0 0 10px var(--pink),0 0 18px var(--purple);
   animation:pulse 1.2s infinite;
 }
 
-/* DJ NAME NEON */
+/* DJ NAME */
 #djName{
   font-weight:800;
   background:linear-gradient(90deg,var(--pink),var(--purple));
@@ -133,9 +131,8 @@ h1{
   animation:neonPulse 2s infinite alternate;
 }
 
-/* YAYINDA NEON */
+/* YAYINDA */
 #onAir{
-  margin-left:4px;
   font-weight:700;
   color:#fff;
   text-shadow:
@@ -150,24 +147,12 @@ h1{
   margin-top:18px;
   font-size:.7em;
   opacity:.45;
-  letter-spacing:.3px;
 }
 
-@keyframes pulse{
-  0%{opacity:1}
-  50%{opacity:.35}
-  100%{opacity:1}
-}
-
-@keyframes neonPulse{
-  from{opacity:.85}
-  to{opacity:1}
-}
-
-@keyframes onairPulse{
-  from{opacity:.7}
-  to{opacity:1}
-}
+/* ANIM */
+@keyframes pulse{0%{opacity:1}50%{opacity:.35}100%{opacity:1}}
+@keyframes neonPulse{from{opacity:.85}to{opacity:1}}
+@keyframes onairPulse{from{opacity:.7}to{opacity:1}}
 
 audio{display:none}
 </style>
@@ -191,14 +176,12 @@ audio{display:none}
     <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
   </div>
 
-  <!-- DJ + YAYINDA -->
   <div class="live">
     <div class="live-dot"></div>
-    <span id="djName">DJ Delibal</span>
+    <span id="djName">Yükleniyor...</span>
     <span id="onAir">YAYINDA</span>
   </div>
 
-  <!-- TELİF / PROFESYONEL -->
   <div class="footer">
     © 2026 Delibal FM • Tüm yayın hakları saklıdır.
   </div>
@@ -232,6 +215,18 @@ playBtn.onclick = () => {
 };
 
 volume.oninput = e => radio.volume = e.target.value;
+
+/* 🔥 CANLI DJ YÜKLEME */
+async function loadDJ(){
+  try{
+    const res = await fetch("dj.txt?cache=" + Date.now());
+    const name = await res.text();
+    document.getElementById("djName").innerText = name.trim();
+  }catch(e){}
+}
+
+loadDJ();
+setInterval(loadDJ, 5000); // 5 saniyede bir günceller
 </script>
 
 </body>
