@@ -25,13 +25,13 @@ body{
   padding:20px;
 }
 
-/* ANA PLAYER */
+/* PLAYER */
 .player{
   width:100%;
   max-width:420px;
   background:linear-gradient(180deg,#1a0f2e,#10071e);
   border-radius:26px;
-  padding:30px 26px 34px;
+  padding:30px 26px 26px;
   text-align:center;
   position:relative;
   box-shadow:
@@ -64,7 +64,7 @@ h1{
   margin-bottom:26px;
 }
 
-/* PLAY BUTTON */
+/* PLAY */
 .play-btn{
   width:96px;
   height:96px;
@@ -97,7 +97,7 @@ h1{
   accent-color:var(--pink);
 }
 
-/* LIVE */
+/* LIVE AREA */
 .live{
   margin-top:24px;
   font-size:1em;
@@ -108,26 +108,55 @@ h1{
   gap:8px;
 }
 
+/* NEON DOT (UYUMLU PEMBE/MOR) */
 .live-dot{
   width:10px;
   height:10px;
   border-radius:50%;
-  background:#ff3b3b;
-  box-shadow:0 0 12px #ff3b3b;
-  animation:pulse 1s infinite;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  box-shadow:
+    0 0 10px var(--pink),
+    0 0 18px var(--purple);
+  animation:pulse 1.2s infinite;
 }
 
-/* DJ NEON EFEKT */
+/* DJ NAME NEON */
 #djName{
   font-weight:800;
   background:linear-gradient(90deg,var(--pink),var(--purple));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
   text-shadow:
-    0 0 6px rgba(255,79,216,.8),
-    0 0 14px rgba(122,76,255,.8),
-    0 0 28px rgba(255,79,216,.6);
+    0 0 6px rgba(255,79,216,.9),
+    0 0 16px rgba(122,76,255,.8),
+    0 0 32px rgba(255,79,216,.6);
   animation:neonPulse 2s infinite alternate;
+}
+
+/* YAYINDA NEON */
+#onAir{
+  margin-left:4px;
+  font-weight:700;
+  color:#fff;
+  text-shadow:
+    0 0 6px rgba(255,255,255,.8),
+    0 0 14px rgba(255,79,216,.7),
+    0 0 26px rgba(122,76,255,.6);
+  animation:onairPulse 1.8s infinite alternate;
+}
+
+/* FOOTER */
+.footer{
+  margin-top:18px;
+  font-size:.7em;
+  opacity:.45;
+  letter-spacing:.3px;
+}
+
+@keyframes pulse{
+  0%{opacity:1}
+  50%{opacity:.35}
+  100%{opacity:1}
 }
 
 @keyframes neonPulse{
@@ -135,10 +164,9 @@ h1{
   to{opacity:1}
 }
 
-@keyframes pulse{
-  0%{opacity:1}
-  50%{opacity:.3}
-  100%{opacity:1}
+@keyframes onairPulse{
+  from{opacity:.7}
+  to{opacity:1}
 }
 
 audio{display:none}
@@ -163,10 +191,16 @@ audio{display:none}
     <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
   </div>
 
-  <!-- 🔥 DJ ADI – BURAYI DEĞİŞTİR -->
+  <!-- DJ + YAYINDA -->
   <div class="live">
     <div class="live-dot"></div>
-    <span id="djName">Auto DJ</span> YAYINDA
+    <span id="djName">Auto DJ</span>
+    <span id="onAir">YAYINDA</span>
+  </div>
+
+  <!-- TELİF / PROFESYONEL -->
+  <div class="footer">
+    © 2026 Delibal FM • Tüm yayın hakları saklıdır.
   </div>
 
   <audio id="radio" preload="none">
