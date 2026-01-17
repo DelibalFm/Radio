@@ -142,6 +142,21 @@ h1{
   animation:onairPulse 1.8s infinite alternate;
 }
 
+/* SONG */
+.song{
+  margin-top:14px;
+  font-size:.95em;
+  font-weight:700;
+  background:linear-gradient(90deg,var(--pink),var(--purple));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:
+    0 0 6px rgba(255,79,216,.7),
+    0 0 16px rgba(122,76,255,.7),
+    0 0 28px rgba(255,79,216,.5);
+  animation:neonPulse 2s infinite alternate;
+}
+
 /* FOOTER */
 .footer{
   margin-top:18px;
@@ -182,6 +197,10 @@ audio{display:none}
     <span id="onAir">YAYINDA</span>
   </div>
 
+  <div class="song">
+    <span id="songTitle">Şarkı yükleniyor...</span>
+  </div>
+
   <div class="footer">
     © 2026 Delibal FM • Tüm yayın hakları saklıdır.
   </div>
@@ -216,7 +235,7 @@ playBtn.onclick = () => {
 
 volume.oninput = e => radio.volume = e.target.value;
 
-/* 🔥 CANLI DJ YÜKLEME */
+/* 🔥 CANLI DJ */
 async function loadDJ(){
   try{
     const res = await fetch("dj.txt?cache=" + Date.now());
@@ -225,8 +244,34 @@ async function loadDJ(){
   }catch(e){}
 }
 
+/* 🎵 CANLI ŞARKI (SonicPanel / Icecast) */
+async function loadSong(){
+  try{
+    const res = await fetch(
+      "https://radyoserver1.okeylisans.com:8030/status-json.xsl",
+      { cache: "no-store" }
+    );
+
+    const data = await res.json();
+    let source = data.icestats.source;
+
+    if (Array.isArray(source)) {
+      source = source.find(s => s.listenurl.includes("8030"));
+    }
+
+    document.getElementById("songTitle").innerText =
+      source?.title || "Şarkı bilgisi yok";
+
+  }catch(e){
+    document.getElementById("songTitle").innerText =
+      "Şarkı bilgisi alınamadı";
+  }
+}
+
 loadDJ();
-setInterval(loadDJ, 5000); // 5 saniyede bir günceller
+loadSong();
+setInterval(loadDJ, 5000);
+setInterval(loadSong, 5000);
 </script>
 
 </body>
