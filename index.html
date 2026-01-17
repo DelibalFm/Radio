@@ -59,7 +59,7 @@ h1{
 .subtitle{
   opacity:.8;
   font-size:.95em;
-  margin-bottom:16px;
+  margin-bottom:14px;
 }
 
 /* LIVE */
@@ -106,7 +106,7 @@ h1{
 }
 
 .song-prefix{
-  margin-right:12px;
+  margin-right:10px;
   background:linear-gradient(90deg,var(--pink),var(--purple));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
@@ -225,8 +225,9 @@ const songTitle = document.getElementById("songTitle");
 const djName = document.getElementById("djName");
 
 let playing = false;
+let songTimer = null;
 
-/* PLAY */
+/* PLAY (mobil fix dahil) */
 playBtn.onclick = () => {
   if(!playing){
     radio.play();
@@ -234,6 +235,12 @@ playBtn.onclick = () => {
       '<rect x="6" y="5" width="4" height="14"/>' +
       '<rect x="14" y="5" width="4" height="14"/>';
     playing = true;
+
+    loadSong();
+    if(!songTimer){
+      songTimer = setInterval(loadSong, 5000);
+    }
+
   }else{
     radio.pause();
     icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
@@ -275,11 +282,11 @@ async function loadSong(){
   }
 }
 
+/* PAGE LOAD */
 loadDJ();
-loadSong();
+loadSong();              // PC için
 setInterval(loadDJ,5000);
-setInterval(loadSong,5000);
 </script>
 
 </body>
-</html
+</html>
