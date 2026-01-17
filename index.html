@@ -25,6 +25,7 @@ body{
   padding:20px;
 }
 
+/* PLAYER */
 .player{
   width:100%;
   max-width:420px;
@@ -49,6 +50,7 @@ body{
   z-index:-1;
 }
 
+/* LOGO */
 h1{
   margin:0 0 6px;
   font-size:2.3em;
@@ -62,61 +64,25 @@ h1{
   margin-bottom:14px;
 }
 
-/* LIVE */
-.live{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  font-size:1em;
-  font-weight:800;
-}
-
-.live-dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--pink),var(--purple));
-  box-shadow:0 0 10px var(--pink),0 0 18px var(--purple);
-  animation:pulse 1.2s infinite;
-}
-
-.dj-gradient{
-  background:linear-gradient(90deg,var(--pink),var(--purple));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  text-shadow:
-    0 0 6px rgba(255,79,216,.9),
-    0 0 16px rgba(122,76,255,.7);
-}
-
-/* SONG */
+/* SONG TEXT (MARQUEE) */
 .song-wrap{
-  margin:12px 0 18px;
   overflow:hidden;
   white-space:nowrap;
+  margin-bottom:18px;
 }
 
 .song-text{
   display:inline-block;
   padding-left:100%;
-  animation:scroll 15s linear infinite;
+  animation:scroll 14s linear infinite;
   font-size:.95em;
-  font-weight:600;
-}
-
-.song-prefix{
-  margin-right:10px;
+  font-weight:700;
   background:linear-gradient(90deg,var(--pink),var(--purple));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  font-weight:800;
-}
-
-.song-name{
-  background:linear-gradient(90deg,#fff,var(--pink));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+  text-shadow:
+    0 0 6px rgba(255,79,216,.8),
+    0 0 14px rgba(122,76,255,.6);
 }
 
 @keyframes scroll{
@@ -129,7 +95,7 @@ h1{
   width:96px;
   height:96px;
   border-radius:50%;
-  margin:0 auto 22px;
+  margin:0 auto 24px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -149,24 +115,67 @@ h1{
   display:block;
   font-size:.85em;
   opacity:.7;
-  margin-bottom:6px;
+  margin-bottom:8px;
 }
 .volume input{
   width:100%;
   accent-color:var(--pink);
 }
 
+/* LIVE */
+.live{
+  margin-top:22px;
+  font-size:1em;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+
+/* DOT */
+.live-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  box-shadow:0 0 10px var(--pink),0 0 18px var(--purple);
+  animation:pulse 1.2s infinite;
+}
+
+/* DJ NAME */
+#djName{
+  font-weight:800;
+  background:linear-gradient(90deg,var(--pink),var(--purple));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:
+    0 0 6px rgba(255,79,216,.9),
+    0 0 16px rgba(122,76,255,.8),
+    0 0 32px rgba(255,79,216,.6);
+  animation:neonPulse 2s infinite alternate;
+}
+
+/* YAYINDA */
+#onAir{
+  font-weight:800;
+  background:linear-gradient(90deg,var(--pink),var(--purple));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:onairPulse 1.6s infinite alternate;
+}
+
+/* FOOTER */
 .footer{
-  margin-top:16px;
+  margin-top:18px;
   font-size:.7em;
   opacity:.45;
 }
 
-@keyframes pulse{
-  0%{opacity:1}
-  50%{opacity:.35}
-  100%{opacity:1}
-}
+/* ANIM */
+@keyframes pulse{0%{opacity:1}50%{opacity:.35}100%{opacity:1}}
+@keyframes neonPulse{from{opacity:.8}to{opacity:1}}
+@keyframes onairPulse{from{opacity:.7}to{opacity:1}}
 
 audio{display:none}
 </style>
@@ -179,22 +188,13 @@ audio{display:none}
   <h1>Delibal FM</h1>
   <div class="subtitle">Canlı Radyo Yayını</div>
 
-  <!-- LIVE -->
-  <div class="live">
-    <div class="live-dot"></div>
-    <span id="djName" class="dj-gradient">Yükleniyor...</span>
-    <span class="dj-gradient">YAYINDA !</span>
-  </div>
-
-  <!-- SONG -->
+  <!-- KAYAN ŞARKI YAZISI -->
   <div class="song-wrap">
     <div class="song-text">
-      <span class="song-prefix">♫ ŞU AN ÇALAN ŞARKI:</span>
-      <span id="songTitle" class="song-name">Yükleniyor...</span>
+      ♫ Şu anda çalan şarkı tüm dinleyenlere armağandır ♫
     </div>
   </div>
 
-  <!-- PLAY -->
   <div class="play-btn" id="playBtn">
     <svg id="icon" viewBox="0 0 24 24">
       <path d="M8 5v14l11-7z"/>
@@ -206,11 +206,17 @@ audio{display:none}
     <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
   </div>
 
+  <div class="live">
+    <div class="live-dot"></div>
+    <span id="djName">Yükleniyor...</span>
+    <span id="onAir">YAYINDA !</span>
+  </div>
+
   <div class="footer">
     © 2026 Delibal FM • Tüm yayın hakları saklıdır.
   </div>
 
-  <audio id="radio">
+  <audio id="radio" preload="none">
     <source src="https://radyoserver1.okeylisans.com:8030/live.mp3" type="audio/mpeg">
   </audio>
 
@@ -221,13 +227,9 @@ const radio = document.getElementById("radio");
 const playBtn = document.getElementById("playBtn");
 const icon = document.getElementById("icon");
 const volume = document.getElementById("volume");
-const songTitle = document.getElementById("songTitle");
-const djName = document.getElementById("djName");
 
 let playing = false;
-let songTimer = null;
 
-/* PLAY (mobil fix dahil) */
 playBtn.onclick = () => {
   if(!playing){
     radio.play();
@@ -235,12 +237,6 @@ playBtn.onclick = () => {
       '<rect x="6" y="5" width="4" height="14"/>' +
       '<rect x="14" y="5" width="4" height="14"/>';
     playing = true;
-
-    loadSong();
-    if(!songTimer){
-      songTimer = setInterval(loadSong, 5000);
-    }
-
   }else{
     radio.pause();
     icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
@@ -254,37 +250,11 @@ volume.oninput = e => radio.volume = e.target.value;
 async function loadDJ(){
   try{
     const res = await fetch("dj.txt?cache=" + Date.now());
-    djName.innerText = (await res.text()).trim();
-  }catch{
-    djName.innerText = "Delibal FM";
-  }
+    document.getElementById("djName").innerText = (await res.text()).trim();
+  }catch{}
 }
 
-/* SHOUTcast SONG */
-async function loadSong(){
-  try{
-    const url =
-      "https://api.allorigins.win/raw?url=" +
-      encodeURIComponent(
-        "https://radyoserver1.okeylisans.com:8030/stats?json=1"
-      );
-
-    const res = await fetch(url,{cache:"no-store"});
-    const data = await res.json();
-
-    songTitle.innerText =
-      data.songtitle ||
-      data.streams?.[0]?.songtitle ||
-      "Şarkı bilgisi yok";
-
-  }catch{
-    songTitle.innerText = "Şarkı bilgisi alınamadı";
-  }
-}
-
-/* PAGE LOAD */
 loadDJ();
-loadSong();              // PC için
 setInterval(loadDJ,5000);
 </script>
 
