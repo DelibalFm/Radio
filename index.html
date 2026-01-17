@@ -25,7 +25,6 @@ body{
   padding:20px;
 }
 
-/* PLAYER */
 .player{
   width:100%;
   max-width:420px;
@@ -50,7 +49,6 @@ body{
   z-index:-1;
 }
 
-/* LOGO */
 h1{
   margin:0 0 6px;
   font-size:2.3em;
@@ -61,15 +59,27 @@ h1{
 .subtitle{
   opacity:.8;
   font-size:.95em;
-  margin-bottom:26px;
+  margin-bottom:18px;
 }
 
-/* PLAY */
+#songTitle{
+  margin-bottom:18px;
+  font-size:1.05em;
+  font-weight:600;
+  background:linear-gradient(90deg,var(--pink),var(--purple));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:
+    0 0 6px rgba(255,79,216,.6),
+    0 0 14px rgba(122,76,255,.5);
+  min-height:24px;
+}
+
 .play-btn{
   width:96px;
   height:96px;
   border-radius:50%;
-  margin:0 auto 24px;
+  margin:0 auto 22px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -84,22 +94,19 @@ h1{
 .play-btn:hover{transform:scale(1.08)}
 .play-btn svg{width:42px;height:42px;fill:#12061f}
 
-/* VOLUME */
-.volume{margin-top:10px}
 .volume label{
   display:block;
   font-size:.85em;
   opacity:.7;
-  margin-bottom:8px;
+  margin-bottom:6px;
 }
 .volume input{
   width:100%;
   accent-color:var(--pink);
 }
 
-/* LIVE */
 .live{
-  margin-top:24px;
+  margin-top:20px;
   font-size:1em;
   font-weight:600;
   display:flex;
@@ -108,7 +115,6 @@ h1{
   gap:8px;
 }
 
-/* DOT */
 .live-dot{
   width:10px;
   height:10px;
@@ -118,20 +124,13 @@ h1{
   animation:pulse 1.2s infinite;
 }
 
-/* DJ NAME */
 #djName{
   font-weight:800;
   background:linear-gradient(90deg,var(--pink),var(--purple));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  text-shadow:
-    0 0 6px rgba(255,79,216,.9),
-    0 0 16px rgba(122,76,255,.8),
-    0 0 32px rgba(255,79,216,.6);
-  animation:neonPulse 2s infinite alternate;
 }
 
-/* YAYINDA */
 #onAir{
   font-weight:700;
   color:#fff;
@@ -139,35 +138,19 @@ h1{
     0 0 6px rgba(255,255,255,.8),
     0 0 14px rgba(255,79,216,.7),
     0 0 26px rgba(122,76,255,.6);
-  animation:onairPulse 1.8s infinite alternate;
 }
 
-/* SONG */
-.song{
-  margin-top:14px;
-  font-size:.95em;
-  font-weight:700;
-  background:linear-gradient(90deg,var(--pink),var(--purple));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  text-shadow:
-    0 0 6px rgba(255,79,216,.7),
-    0 0 16px rgba(122,76,255,.7),
-    0 0 28px rgba(255,79,216,.5);
-  animation:neonPulse 2s infinite alternate;
-}
-
-/* FOOTER */
 .footer{
-  margin-top:18px;
+  margin-top:16px;
   font-size:.7em;
   opacity:.45;
 }
 
-/* ANIM */
-@keyframes pulse{0%{opacity:1}50%{opacity:.35}100%{opacity:1}}
-@keyframes neonPulse{from{opacity:.85}to{opacity:1}}
-@keyframes onairPulse{from{opacity:.7}to{opacity:1}}
+@keyframes pulse{
+  0%{opacity:1}
+  50%{opacity:.35}
+  100%{opacity:1}
+}
 
 audio{display:none}
 </style>
@@ -179,6 +162,8 @@ audio{display:none}
 
   <h1>Delibal FM</h1>
   <div class="subtitle">Canlı Radyo Yayını</div>
+
+  <div id="songTitle">Şarkı yükleniyor...</div>
 
   <div class="play-btn" id="playBtn">
     <svg id="icon" viewBox="0 0 24 24">
@@ -193,19 +178,15 @@ audio{display:none}
 
   <div class="live">
     <div class="live-dot"></div>
-    <span id="djName">Yükleniyor...</span>
+    <span id="djName">Delibal FM</span>
     <span id="onAir">YAYINDA</span>
-  </div>
-
-  <div class="song">
-    <span id="songTitle">Şarkı yükleniyor...</span>
   </div>
 
   <div class="footer">
     © 2026 Delibal FM • Tüm yayın hakları saklıdır.
   </div>
 
-  <audio id="radio" preload="none">
+  <audio id="radio">
     <source src="https://radyoserver1.okeylisans.com:8030/live.mp3" type="audio/mpeg">
   </audio>
 
@@ -216,6 +197,7 @@ const radio = document.getElementById("radio");
 const playBtn = document.getElementById("playBtn");
 const icon = document.getElementById("icon");
 const volume = document.getElementById("volume");
+const songTitle = document.getElementById("songTitle");
 
 let playing = false;
 
@@ -235,40 +217,31 @@ playBtn.onclick = () => {
 
 volume.oninput = e => radio.volume = e.target.value;
 
-/* 🔥 CANLI DJ (txt) */
-async function loadDJ(){
-  try{
-    const res = await fetch("dj.txt?cache=" + Date.now());
-    const name = await res.text();
-    document.getElementById("djName").innerText = name.trim();
-  }catch(e){}
-}
-
-/* 🎵 CANLI ŞARKI (SHOUTcast) */
+/* 🎵 SHOUTcast ŞARKI BİLGİSİ (CORS PROXY) */
 async function loadSong(){
   try{
-    const res = await fetch(
-      "https://radyoserver1.okeylisans.com:8030/stats?json=1",
-      { cache: "no-store" }
-    );
+    const url =
+      "https://api.allorigins.win/raw?url=" +
+      encodeURIComponent(
+        "https://radyoserver1.okeylisans.com:8030/stats?json=1"
+      );
 
+    const res = await fetch(url, { cache:"no-store" });
     const data = await res.json();
+
     const song =
       data.songtitle ||
       data.streams?.[0]?.songtitle ||
       "Şarkı bilgisi yok";
 
-    document.getElementById("songTitle").innerText = song;
+    songTitle.innerText = song;
 
   }catch(e){
-    document.getElementById("songTitle").innerText =
-      "Şarkı bilgisi alınamadı";
+    songTitle.innerText = "Şarkı bilgisi alınamadı";
   }
 }
 
-loadDJ();
 loadSong();
-setInterval(loadDJ, 5000);
 setInterval(loadSong, 5000);
 </script>
 
