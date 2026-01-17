@@ -59,18 +59,17 @@ h1{
 .subtitle{
   opacity:.8;
   font-size:.95em;
-  margin-bottom:18px;
+  margin-bottom:16px;
 }
 
-/* DJ */
+/* LIVE */
 .live{
-  margin-top:6px;
-  font-size:1em;
-  font-weight:700;
   display:flex;
   align-items:center;
   justify-content:center;
   gap:8px;
+  font-size:1em;
+  font-weight:800;
 }
 
 .live-dot{
@@ -82,27 +81,36 @@ h1{
   animation:pulse 1.2s infinite;
 }
 
-#djName{
+.dj-gradient{
   background:linear-gradient(90deg,var(--pink),var(--purple));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  font-weight:800;
+  text-shadow:
+    0 0 6px rgba(255,79,216,.9),
+    0 0 16px rgba(122,76,255,.7);
 }
 
-#onAir{
-  color:#fff;
+/* SONG MARQUEE */
+.song-wrap{
+  margin:10px 0 18px;
+  overflow:hidden;
+  white-space:nowrap;
 }
 
-/* SONG */
-#songTitle{
-  margin-top:8px;
-  margin-bottom:18px;
+.song-text{
+  display:inline-block;
+  padding-left:100%;
+  animation:scroll 14s linear infinite;
   font-size:.95em;
-  opacity:.9;
+  font-weight:600;
   background:linear-gradient(90deg,#fff,var(--pink));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  min-height:20px;
+}
+
+@keyframes scroll{
+  from{transform:translateX(0)}
+  to{transform:translateX(-100%)}
 }
 
 /* PLAY */
@@ -160,15 +168,17 @@ audio{display:none}
   <h1>Delibal FM</h1>
   <div class="subtitle">Canlı Radyo Yayını</div>
 
-  <!-- DJ -->
+  <!-- LIVE -->
   <div class="live">
     <div class="live-dot"></div>
-    <span id="djName">Yükleniyor...</span>
-    <span id="onAir">yayında</span>
+    <span id="djName" class="dj-gradient">Yükleniyor...</span>
+    <span class="dj-gradient">YAYINDA !</span>
   </div>
 
   <!-- SONG -->
-  <div id="songTitle">Şarkı yükleniyor...</div>
+  <div class="song-wrap">
+    <div id="songTitle" class="song-text">Şarkı yükleniyor...</div>
+  </div>
 
   <!-- PLAY -->
   <div class="play-btn" id="playBtn">
@@ -219,17 +229,17 @@ playBtn.onclick = () => {
 
 volume.oninput = e => radio.volume = e.target.value;
 
-/* 🎧 DJ TXT */
+/* DJ TXT */
 async function loadDJ(){
   try{
     const res = await fetch("dj.txt?cache=" + Date.now());
     djName.innerText = (await res.text()).trim();
-  }catch(e){
+  }catch{
     djName.innerText = "Delibal FM";
   }
 }
 
-/* 🎵 SHOUTcast SONG */
+/* SHOUTcast SONG */
 async function loadSong(){
   try{
     const url =
@@ -246,7 +256,7 @@ async function loadSong(){
       data.streams?.[0]?.songtitle ||
       "Şarkı bilgisi yok";
 
-  }catch(e){
+  }catch{
     songTitle.innerText = "Şarkı bilgisi alınamadı";
   }
 }
