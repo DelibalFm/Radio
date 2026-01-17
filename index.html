@@ -235,7 +235,7 @@ playBtn.onclick = () => {
 
 volume.oninput = e => radio.volume = e.target.value;
 
-/* 🔥 CANLI DJ */
+/* 🔥 CANLI DJ (txt) */
 async function loadDJ(){
   try{
     const res = await fetch("dj.txt?cache=" + Date.now());
@@ -244,23 +244,21 @@ async function loadDJ(){
   }catch(e){}
 }
 
-/* 🎵 CANLI ŞARKI (SonicPanel / Icecast) */
+/* 🎵 CANLI ŞARKI (SHOUTcast) */
 async function loadSong(){
   try{
     const res = await fetch(
-      "https://radyoserver1.okeylisans.com:8030/status-json.xsl",
+      "https://radyoserver1.okeylisans.com:8030/stats?json=1",
       { cache: "no-store" }
     );
 
     const data = await res.json();
-    let source = data.icestats.source;
+    const song =
+      data.songtitle ||
+      data.streams?.[0]?.songtitle ||
+      "Şarkı bilgisi yok";
 
-    if (Array.isArray(source)) {
-      source = source.find(s => s.listenurl.includes("8030"));
-    }
-
-    document.getElementById("songTitle").innerText =
-      source?.title || "Şarkı bilgisi yok";
+    document.getElementById("songTitle").innerText = song;
 
   }catch(e){
     document.getElementById("songTitle").innerText =
