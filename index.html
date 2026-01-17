@@ -62,19 +62,50 @@ h1{
   margin-bottom:18px;
 }
 
-#songTitle{
-  margin-bottom:18px;
-  font-size:1.05em;
-  font-weight:600;
+/* DJ */
+.live{
+  margin-top:6px;
+  font-size:1em;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+
+.live-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  box-shadow:0 0 10px var(--pink),0 0 18px var(--purple);
+  animation:pulse 1.2s infinite;
+}
+
+#djName{
   background:linear-gradient(90deg,var(--pink),var(--purple));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  text-shadow:
-    0 0 6px rgba(255,79,216,.6),
-    0 0 14px rgba(122,76,255,.5);
-  min-height:24px;
+  font-weight:800;
 }
 
+#onAir{
+  color:#fff;
+}
+
+/* SONG */
+#songTitle{
+  margin-top:8px;
+  margin-bottom:18px;
+  font-size:.95em;
+  opacity:.9;
+  background:linear-gradient(90deg,#fff,var(--pink));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  min-height:20px;
+}
+
+/* PLAY */
 .play-btn{
   width:96px;
   height:96px;
@@ -94,6 +125,7 @@ h1{
 .play-btn:hover{transform:scale(1.08)}
 .play-btn svg{width:42px;height:42px;fill:#12061f}
 
+/* VOLUME */
 .volume label{
   display:block;
   font-size:.85em;
@@ -103,41 +135,6 @@ h1{
 .volume input{
   width:100%;
   accent-color:var(--pink);
-}
-
-.live{
-  margin-top:20px;
-  font-size:1em;
-  font-weight:600;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-}
-
-.live-dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--pink),var(--purple));
-  box-shadow:0 0 10px var(--pink),0 0 18px var(--purple);
-  animation:pulse 1.2s infinite;
-}
-
-#djName{
-  font-weight:800;
-  background:linear-gradient(90deg,var(--pink),var(--purple));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-#onAir{
-  font-weight:700;
-  color:#fff;
-  text-shadow:
-    0 0 6px rgba(255,255,255,.8),
-    0 0 14px rgba(255,79,216,.7),
-    0 0 26px rgba(122,76,255,.6);
 }
 
 .footer{
@@ -163,8 +160,17 @@ audio{display:none}
   <h1>Delibal FM</h1>
   <div class="subtitle">Canlı Radyo Yayını</div>
 
+  <!-- DJ -->
+  <div class="live">
+    <div class="live-dot"></div>
+    <span id="djName">Yükleniyor...</span>
+    <span id="onAir">yayında</span>
+  </div>
+
+  <!-- SONG -->
   <div id="songTitle">Şarkı yükleniyor...</div>
 
+  <!-- PLAY -->
   <div class="play-btn" id="playBtn">
     <svg id="icon" viewBox="0 0 24 24">
       <path d="M8 5v14l11-7z"/>
@@ -174,12 +180,6 @@ audio{display:none}
   <div class="volume">
     <label>Ses Seviyesi</label>
     <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
-  </div>
-
-  <div class="live">
-    <div class="live-dot"></div>
-    <span id="djName">Delibal FM</span>
-    <span id="onAir">YAYINDA</span>
   </div>
 
   <div class="footer">
@@ -198,9 +198,11 @@ const playBtn = document.getElementById("playBtn");
 const icon = document.getElementById("icon");
 const volume = document.getElementById("volume");
 const songTitle = document.getElementById("songTitle");
+const djName = document.getElementById("djName");
 
 let playing = false;
 
+/* PLAY */
 playBtn.onclick = () => {
   if(!playing){
     radio.play();
@@ -217,7 +219,17 @@ playBtn.onclick = () => {
 
 volume.oninput = e => radio.volume = e.target.value;
 
-/* 🎵 SHOUTcast ŞARKI BİLGİSİ (CORS PROXY) */
+/* 🎧 DJ TXT */
+async function loadDJ(){
+  try{
+    const res = await fetch("dj.txt?cache=" + Date.now());
+    djName.innerText = (await res.text()).trim();
+  }catch(e){
+    djName.innerText = "Delibal FM";
+  }
+}
+
+/* 🎵 SHOUTcast SONG */
 async function loadSong(){
   try{
     const url =
@@ -226,23 +238,23 @@ async function loadSong(){
         "https://radyoserver1.okeylisans.com:8030/stats?json=1"
       );
 
-    const res = await fetch(url, { cache:"no-store" });
+    const res = await fetch(url,{cache:"no-store"});
     const data = await res.json();
 
-    const song =
+    songTitle.innerText =
       data.songtitle ||
       data.streams?.[0]?.songtitle ||
       "Şarkı bilgisi yok";
-
-    songTitle.innerText = song;
 
   }catch(e){
     songTitle.innerText = "Şarkı bilgisi alınamadı";
   }
 }
 
+loadDJ();
 loadSong();
-setInterval(loadSong, 5000);
+setInterval(loadDJ,5000);
+setInterval(loadSong,5000);
 </script>
 
 </body>
